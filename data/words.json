@@ -1,0 +1,7 @@
+[
+  {"word":"serendipity","phonetic":"/ˌserənˈdɪpəti/","meaning":"n. 意外发现美好事物的机缘；意外之喜","example":"Finding this little bookshop was pure serendipity.","image":"images/demo-serendipity.svg","addedAt":"2026-10-24T00:00:00Z"},
+  {"word":"resilient","phonetic":"/rɪˈzɪliənt/","meaning":"adj. 有韧性的；能从困境中恢复的","example":"She stayed resilient even when progress felt slow.","image":"images/demo-resilient.svg","addedAt":"2026-10-24T00:01:00Z"},
+  {"word":"gradually","phonetic":"/ˈɡrædʒuəli/","meaning":"adv. 逐渐地；渐渐地","example":"With daily practice, unfamiliar words gradually become familiar.","image":"images/demo-gradually.svg","addedAt":"2026-10-24T00:02:00Z"},
+  {"word":"curiosity","phonetic":"/ˌkjʊriˈɑːsəti/","meaning":"n. 好奇心；求知欲","example":"Curiosity led him to learn a new language.","image":"images/demo-curiosity.svg","addedAt":"2026-10-24T00:03:00Z"},
+  {"word":"make sense","phonetic":"/meɪk sens/","meaning":"phr. 有道理；容易理解；讲得通","example":"The sentence makes sense when you read it in context.","image":"images/demo-make-sense.svg","addedAt":"2026-10-24T00:04:00Z"}
+]

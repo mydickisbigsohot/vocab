@@ -1,0 +1,17 @@
+.local/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+node_modules/
+dist/
+playwright-report/
+test-results/
+*.log
+Thumbs.db
+.DS_Store
