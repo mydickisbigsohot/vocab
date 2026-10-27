@@ -7,7 +7,7 @@ const out = path.join(root, 'dist');
 if(path.dirname(out)!==root || path.basename(out)!=='dist')throw new Error('Invalid build output');
 await rm(out,{recursive:true,force:true});
 await mkdir(out, {recursive:true});
-const files = ['index.html','styles.css','app.js','core.js','db.js','manifest.webmanifest','icons','images','data'];
+const files = ['index.html','styles.css','app.js','core.js','db.js','private-sync.js','manifest.webmanifest','icons','images','data'];
 for (const file of files) await cp(path.join(root,file),path.join(out,file),{recursive:true});
 const hash = createHash('sha256');
 async function hashTree(directory){for(const entry of (await readdir(directory,{withFileTypes:true})).sort((a,b)=>a.name.localeCompare(b.name))){const file=path.join(directory,entry.name);if(entry.isDirectory())await hashTree(file);else{hash.update(path.relative(out,file));hash.update(await readFile(file));}}}

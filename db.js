@@ -6,12 +6,12 @@ let connection;
 export function openDB() {
   if (connection) return connection;
   connection = new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME, 1);
+    const request = indexedDB.open(DB_NAME, 2);
     request.onupgradeneeded = () => {
       const db = request.result;
-      db.createObjectStore('progress', { keyPath: 'id' });
-      db.createObjectStore('meta', { keyPath: 'key' });
-      db.createObjectStore('activity', { keyPath: 'id' });
+      for(const [name,keyPath] of [['progress','id'],['meta','key'],['activity','id'],['privateImages','id'],['uploadQueue','id']]) {
+        if(!db.objectStoreNames.contains(name))db.createObjectStore(name,{keyPath});
+      }
     };
     request.onerror = () => { connection = undefined; reject(request.error); };
     request.onblocked = () => { connection = undefined; reject(new Error('请关闭此应用的其他旧标签页后重试')); };
@@ -47,6 +47,16 @@ export async function all(store) {
 export async function get(store, key) {
   const db = await openDB();
   return readRequest(db.transaction(store, 'readonly').objectStore(store).get(key));
+}
+
+export async function putRecord(store, row) {
+  const db=await openDB(),tx=db.transaction(store,'readwrite'),done=completed(tx);
+  tx.objectStore(store).put(row);await done;
+}
+
+export async function removeRecord(store,key) {
+  const db=await openDB(),tx=db.transaction(store,'readwrite'),done=completed(tx);
+  tx.objectStore(store).delete(key);await done;
 }
 
 export async function putMeta(key, value) {

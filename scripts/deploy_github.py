@@ -37,7 +37,7 @@ PROJECT = {'application': 'screenshot-vocabulary-pwa', 'schema': 1}
 DEMO_WORDS = {'serendipity', 'resilient', 'gradually', 'curiosity', 'make sense'}
 ROOT_FILES = {
     '.gitignore', MARKER, 'index.html', 'styles.css', 'app.js', 'core.js', 'db.js',
-    'sw.js', 'manifest.webmanifest', 'package.json', 'requirements.txt', 'README.md',
+    'sw.js', 'private-sync.js', 'manifest.webmanifest', 'package.json', 'requirements.txt', 'README.md',
 }
 
 
@@ -127,10 +127,11 @@ def allowed_source(path):
     if parent == 'icons':
         return name in {'icon.svg', 'icon-192.png', 'icon-512.png', 'maskable-512.png', 'apple-touch-icon.png'}
     if parent == 'scripts':
-        return name in {'build.mjs', 'update_words.py', 'deploy_github.py', 'README_PIPELINE.md'}
+        return name in {'build.mjs', 'update_words.py', 'deploy_github.py', 'README_PIPELINE.md',
+                        'watch_folder.py', 'README_WATCHER.md', 'manage_watcher.ps1'}
     if parent == 'tests':
         return name in {'core.test.mjs', 'sw.test.mjs', 'app.test.mjs',
-                        'test_pipeline.py', 'test_deploy.py'}
+                        'test_pipeline.py', 'test_deploy.py', 'test_watcher.py', 'private-sync.test.mjs'}
     return False
 
 

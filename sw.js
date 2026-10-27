@@ -2,7 +2,7 @@ const BASE = new URL('./',self.location.href);
 const PREFIX = 'vocab-'+BASE.pathname+'-';
 const SHELL = PREFIX+'shell-__BUILD__';
 const CONTENT = PREFIX+'content-v1';
-const SHELL_FILES = ['./','./index.html','./styles.css','./app.js','./core.js','./db.js','./manifest.webmanifest','./icons/icon.svg','./icons/icon-192.png','./icons/icon-512.png','./icons/maskable-512.png','./icons/apple-touch-icon.png'].map(p=>new URL(p,BASE).href);
+const SHELL_FILES = ['./','./index.html','./styles.css','./app.js','./core.js','./db.js','./private-sync.js','./manifest.webmanifest','./icons/icon.svg','./icons/icon-192.png','./icons/icon-512.png','./icons/maskable-512.png','./icons/apple-touch-icon.png'].map(p=>new URL(p,BASE).href);
 const WORDS_URL = new URL('./data/words.json',BASE).href;
 async function announce(type) {for(const client of await self.clients.matchAll({type:'window',includeUncontrolled:true})){const url=new URL(client.url);if(url.origin===BASE.origin&&url.pathname.startsWith(BASE.pathname))client.postMessage({type});}}
 function imageURLs(words) {

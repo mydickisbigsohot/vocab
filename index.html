@@ -26,23 +26,25 @@
         <span class="edition">ENGLISH<br><b>日积 · 词累</b></span>
       </section>
       <section class="stats" aria-label="学习统计">
-        <div><span class="stat-label">今日已学</span><strong id="stat-today">0</strong><small>个不同单词</small></div>
+        <div><span class="stat-label">今日已学</span><strong id="stat-today">0</strong><small id="stat-today-caption">个不同单词</small></div>
         <div><span class="stat-label">待复习</span><strong id="stat-due">0</strong><small>现在该见面了</small></div>
         <div><span class="stat-label">连续学习</span><strong id="stat-streak">0<span> 天</span></strong><small>每一点都算数</small></div>
       </section>
-      <nav class="tabs" aria-label="主要功能"><button id="tab-study" aria-selected="true">今日学习 <span id="queue-count">0</span></button><button id="tab-library" aria-selected="false">我的词库 <span id="library-count">0</span></button></nav>
+      <nav class="tabs" aria-label="主要功能"><button id="tab-study" aria-selected="true">今日学习 <span id="queue-count">0</span></button><button id="tab-library" aria-selected="false">我的词卡 <span id="library-count">0</span></button></nav>
+      <section class="capture-strip" aria-label="添加单词截图"><div><b>把今天遇到的生词，留给明天。</b><p id="capture-hint">连接私密词库后，可从相册添加截图。</p></div><label class="capture-button" id="upload-label">＋ 添加截图<input id="upload-images" type="file" accept="image/png,image/jpeg,image/webp,image/bmp" multiple hidden></label></section>
       <section id="study-panel" aria-label="学习卡片">
         <div class="study-heading"><span id="card-kind">从一个单词开始</span><span id="daily-budget">每日新词 15 个</span></div>
         <article class="word-card" id="word-card" aria-label="单词卡片">
           <div class="card-decoration" aria-hidden="true">“</div>
           <span class="card-label" id="card-label">TAKE A MOMENT. RECALL IT.</span>
           <h2 id="word">正在准备词卡…</h2>
+          <div id="image-front" class="image-front" hidden><img id="front-image" class="enlargeable" alt="待复习的截图，点击放大" role="button" tabindex="0"><p>看图回忆 · 点击图片可放大</p></div>
           <button class="audio-button" id="speak" aria-label="朗读英语单词">◖)) <span>听发音</span></button>
           <button class="flip-button" id="flip">想一想，再查看释义 <span>↗</span></button>
           <div id="answer" hidden>
             <p id="phonetic" class="phonetic"></p><p id="meaning" class="meaning"></p>
             <div class="example"><span>IN CONTEXT</span><p id="example"></p></div>
-            <details id="image-details"><summary>查看截图来源 <span>＋</span></summary><img id="word-image" alt="这张单词卡片的截图来源" loading="lazy"></details>
+            <details id="image-details"><summary>完整截图 · 点击图片放大 <span>＋</span></summary><img id="word-image" class="enlargeable" alt="完整单词截图，点击放大" loading="lazy" role="button" tabindex="0"></details>
           </div>
           <div id="empty-detail" hidden></div>
         </article>
@@ -54,7 +56,7 @@
         <p class="study-note" id="study-note">先主动回忆，再翻开卡片。诚实的评分，比多学几个更有用。</p>
       </section>
       <section id="library-panel" hidden>
-        <label class="search"><span>⌕</span><input id="search" type="search" placeholder="搜索单词或中文释义" aria-label="搜索词库"></label>
+        <label class="search"><span>⌕</span><input id="search" type="search" placeholder="搜索单词或截图编号" aria-label="搜索词卡"></label>
         <p class="library-hint">词库预览不改变复习计划。</p><div id="word-list"></div>
       </section>
       <section class="sync-strip"><div class="sync-icon">↻</div><div><b id="sync-label">示例词库 · 先试着学几个</b><p id="sync-detail">联网时自动检查词库，学习进度保存在此设备。</p></div><button id="sync">更新词库</button></section>
@@ -66,9 +68,11 @@
     <label class="setting-row"><span>每日新词上限<small>到期的复习词不受此上限限制</small></span><input id="daily-limit" type="number" min="0" max="200" step="1" value="15"></label>
     <label class="setting-row"><span>英语发音<small>离线发音取决于手机已安装的语音</small></span><select id="voice-language"><option value="en-US">美式英语</option><option value="en-GB">英式英语</option></select></label>
     <button class="primary" id="save-settings">保存设置</button>
-    <div class="settings-section"><h3>给记忆留一份备份</h3><p>手机与电脑共用词库，复习进度分别保存。换设备前导出；导入时合并较新的记录。</p><div class="backup-actions"><button id="export">导出进度备份</button><label class="file-button">导入进度备份<input id="import" type="file" accept="application/json,.json" hidden></label></div></div>
+    <div class="settings-section"><h3>给记忆留一份备份</h3><p>连接同一私密词库后，截图和复习进度会自动同步。也可以导出备份，换设备时导入较新的记录。</p><div class="backup-actions"><button id="export">导出进度备份</button><label class="file-button">导入进度备份<input id="import" type="file" accept="application/json,.json" hidden></label></div></div>
+    <div class="settings-section"><h3>连接我的私密词库</h3><p>两端添加截图，共用一份词库。每张截图直接成为复习卡片，无需 AI 或识别费用。图片只存入你自己的私有 GitHub 仓库。</p><label class="connection-field">私有词库仓库<input id="private-repo" type="text" placeholder="GitHub用户名/私有仓库名" autocomplete="off" autocapitalize="none" spellcheck="false"></label><label class="connection-field">此词库专用的 GitHub 同步凭据<input id="private-token" type="password" placeholder="仅粘贴限定此私有仓库的访问令牌" autocomplete="off" spellcheck="false"></label><label class="remember-device"><input id="remember-private" type="checkbox">在我的个人设备上记住连接</label><p>这不是 AI Key，只用于读取和上传私有图片。请使用仅能读写私有词库仓库的细粒度令牌（Contents：Read and write），不要使用有权访问其他仓库的通用凭据。凭据仅发往 GitHub API，不进入公开代码或进度备份。</p><div class="backup-actions"><button id="connect-private">连接并同步</button><button id="disconnect-private">断开私密连接</button></div><p id="private-status">尚未连接，当前显示示例词库。</p></div>
     <div class="settings-section"><h3>随手打开，离线也能学</h3><p>iPhone：用 Safari 打开 → 分享 → 添加到主屏幕。Android：浏览器菜单 → 安装应用 / 添加到主屏幕。联网载入一次，等待下方提示“离线已就绪”。</p><button id="install" hidden>安装词间</button><p id="offline-detail">正在准备离线资源…</p></div>
   </dialog>
+  <dialog id="image-viewer" class="image-viewer" aria-label="放大查看截图"><div class="viewer-toolbar"><span>完整截图</span><button id="zoom-out" aria-label="缩小截图">−</button><span id="zoom-level">100%</span><button id="zoom-in" aria-label="放大截图">＋</button><button id="close-image">完成</button></div><div class="viewer-scroll" id="viewer-scroll"><img id="full-image" alt="放大查看的完整截图"></div></dialog>
   <div class="toast" id="toast" role="status" hidden></div>
   <noscript>请启用 JavaScript 后使用词间。</noscript>
 </body>
