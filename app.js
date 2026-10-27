@@ -42,6 +42,7 @@ function offlineStatus(){offlineReady=shellReady&&(!privateSync.enabled||words.e
 function captureStatus(){
   $('capture-hint').textContent=privateSync.enabled?(privateSync.authenticated?'相册选图后直接同步；电脑新增图也会自动加入。':'已保存私密词库，输入同步凭据可获取新图。'):'先在设置中连接私密词库，再从手机相册添加截图。';
   $('disconnect-private').hidden=!privateSync.enabled;
+  $('copy-private').hidden=!privateSync.authenticated;
 }
 function safeImage(path) {
   if (typeof path !== 'string' || !path.startsWith('images/') || path.includes('..') || path.includes('\\')) return null;
@@ -215,6 +216,12 @@ $('tab-study').onclick=()=>tab('study');$('tab-library').onclick=()=>tab('librar
 $('sync').onclick=()=>sync(true);
 $('open-settings').onclick=()=>{$('daily-limit').value=settings.dailyLimit;$('voice-language').value=settings.lang;$('private-repo').value=privateSync.config?.repo||'';$('private-token').value='';$('remember-private').checked=!!privateSync.config?.remember;$('settings').showModal();};
 $('close-settings').onclick=()=>$('settings').close();
+$('copy-private').onclick=async()=>{
+  $('copy-private').disabled=true;
+  try{await privateSync.copyCredential();toast('已复制同步凭据。仅粘贴到自己的设备，请勿发到聊天。');}
+  catch(error){toast(errorMessage(error));}
+  finally{$('copy-private').disabled=false;}
+};
 $('save-settings').onclick=async()=>{
   const dailyLimit=Number($('daily-limit').value);
   if($('daily-limit').value===''||!Number.isInteger(dailyLimit)||dailyLimit<0||dailyLimit>200){toast('请输入 0 到 200 的整数；0 表示只复习旧词');return;}

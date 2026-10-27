@@ -51,6 +51,23 @@ function api(){
 }
 const make=()=>{const db=storage(),remote=api(),statuses=[];const client=new PrivateSync({storage:db,fetcher:remote.fetcher,onStatus:value=>statuses.push(value),compressor:async()=>new Blob(['RIFF-test-webp'],{type:'image/webp'})});return {db,remote,client,statuses};};
 
+test('credential recovery only writes to the user clipboard and never returns or uploads it',async()=>{
+  const {client,db,remote}=make();await client.configure(REPO,TOKEN,false);
+  const before=remote.calls.length,writes=[];
+  const result=await client.copyCredential({writeText:async value=>writes.push(value)});
+  assert.equal(result,undefined);assert.deepEqual(writes,[TOKEN]);assert.equal(remote.calls.length,before);
+  assert.ok(!JSON.stringify(client.config).includes(TOKEN));assert.ok(!JSON.stringify(await db.exportBackup()).includes(TOKEN));
+});
+
+test('disconnected or denied clipboard recovery cannot expose credential text in errors',async()=>{
+  const {client}=make();let copied=false;
+  await assert.rejects(client.copyCredential({writeText:async()=>copied=true}),error=>error.code==='AUTH_REQUIRED');
+  assert.equal(copied,false);await client.configure(REPO,TOKEN,false);
+  await assert.rejects(client.copyCredential({writeText:async()=>{throw new Error(TOKEN);}}),error=>error.code==='CLIPBOARD_UNAVAILABLE'&&!error.message.includes(TOKEN));
+  await client.disconnect();await assert.rejects(client.copyCredential({writeText:async()=>copied=true}),error=>error.code==='AUTH_REQUIRED');
+  assert.equal(copied,false);
+});
+
 test('image-only cards require full content hash identities and reject foreign paths',()=>{
   assert.deepEqual(validatePrivateWords([card(SHA)]),[card(SHA)]);
   for(const bad of [{...card(SHA),image:'https://example.invalid/private.webp'},{...card(SHA),meaning:'unexpected text'},{...card(SHA),sourceHash:'short'},{...card(SHA),word:'private title'}])assert.throws(()=>validatePrivateWords([bad]));

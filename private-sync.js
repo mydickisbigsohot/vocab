@@ -78,6 +78,11 @@ export class PrivateSync {
   }
   get enabled(){return !!this.config?.repo;}
   get authenticated(){return this.enabled&&!!this.#token;}
+  async copyCredential(clipboard=globalThis.navigator?.clipboard){
+    if(!this.authenticated)fail('AUTH_REQUIRED','此设备没有保存同步凭据，需要重新生成并连接');
+    if(!clipboard||typeof clipboard.writeText!=='function')fail('CLIPBOARD_UNAVAILABLE','请在 Chrome 或 Safari 的正式网页中复制同步凭据');
+    try{await clipboard.writeText(this.#token);}catch{fail('CLIPBOARD_UNAVAILABLE','浏览器未允许复制，请在正式浏览器中点击按钮重试');}
+  }
   #notify(value){this.onStatus(value);}
   #assertGeneration(generation){if(generation!==this.#generation)fail('CONNECTION_CHANGED','私密连接已改变，原请求已停止');}
   async #rememberMeta(key,value,generation){
